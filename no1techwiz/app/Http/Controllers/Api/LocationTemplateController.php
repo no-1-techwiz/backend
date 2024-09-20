@@ -1,44 +1,69 @@
 <?php
 
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\LocationTemplate;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\TripController;
-use App\Http\Controllers\Api\CategoryController;
-use App\Http\Controllers\Api\LocationTemplateController;
-use App\Http\Controllers\Api\LocationController;
-use App\Http\Controllers\Api\FeedbackController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+class LocationTemplateController extends Controller
+{
+    /**
+     * Hiển thị danh sách các location template
+     */
+    public function index()
+    {
+        $locationTemplates = LocationTemplate::with('category')->get();
+        return response()->json($locationTemplates);
+    }
 
-// Định nghĩa các apiResource một cách ngắn gọn
-Route::apiResources([
-    'users' => UserController::class,
-    'trips' => TripController::class,
-    'categories' => CategoryController::class,
-    'location-templates' => LocationTemplateController::class,
-    'locations' => LocationController::class,
-    'feedback' => FeedbackController::class,
-]);
+    /**
+     * Lưu một location template mới
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'image' => 'nullable|string|max:255',
+        ]);
 
-// Nếu bạn cần áp dụng middleware cho các route cụ thể, bạn có thể nhóm chúng như sau:
-// Ví dụ: Chỉ cho phép tạo, cập nhật và xóa khi người dùng đã đăng nhập
-Route::middleware('auth:api')->group(function () {
-    Route::apiResources([
-        'users' => UserController::class,
-        'trips' => TripController::class,
-        'categories' => CategoryController::class,
-        'location-templates' => LocationTemplateController::class,
-        'locations' => LocationController::class,
-        'feedback' => FeedbackController::class,
-    ]);
-});
+        $locationTemplate = LocationTemplate::create($request->all());
+
+        return response()->json($locationTemplate, 201);
+    }
+
+    /**
+     * Hiển thị một location template theo ID
+     */
+    public function show(LocationTemplate $locationTemplate)
+    {
+        $locationTemplate->load('category');
+        return response()->json($locationTemplate);
+    }
+
+    /**
+     * Cập nhật một location template
+     */
+    public function update(Request $request, LocationTemplate $locationTemplate)
+    {
+        $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'category_id' => 'sometimes|exists:categories,id',
+            'image' => 'nullable|string|max:255',
+        ]);
+
+        $locationTemplate->update($request->all());
+
+        return response()->json($locationTemplate);
+    }
+
+    /**
+     * Xóa một location template
+     */
+    public function destroy(LocationTemplate $locationTemplate)
+    {
+        $locationTemplate->delete();
+        return response()->json(null, 204);
+    }
+}
