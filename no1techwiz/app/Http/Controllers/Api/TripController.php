@@ -18,6 +18,7 @@ class TripController extends Controller
     // Hiển thị chuyến đi theo ID
     public function show(Trip $trip)
     {
+        $trip = Trip::with('currency')->findOrFail($id);
         return response()->json($trip);
     }
 
@@ -32,6 +33,7 @@ class TripController extends Controller
             'destination' => 'required|string|max:255',
             'budget' => 'required|numeric',
             'note' => 'nullable|string',
+            'currency_id' => 'nullable|exists:currencies,id',
         ]);
 
         $trip = Trip::create($request->all());
@@ -42,6 +44,7 @@ class TripController extends Controller
     // Cập nhật chuyến đi
     public function update(Request $request, Trip $trip)
     {
+        $trip = Trip::findOrFail($id);
         $request->validate([
             'user_id' => 'sometimes|exists:users,id',
             'trip_name' => 'sometimes|string|max:255',
@@ -50,6 +53,7 @@ class TripController extends Controller
             'destination' => 'sometimes|string|max:255',
             'budget' => 'sometimes|numeric',
             'note' => 'nullable|string',
+            'currency_id' => 'nullable|exists:currencies,id',
         ]);
 
         $trip->update($request->all());

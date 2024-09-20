@@ -10,7 +10,7 @@ class Trip extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'trip_name', 'start_date', 'end_date', 'destination', 'budget', 'note'
+        'user_id', 'trip_name', 'start_date', 'end_date', 'destination', 'budget', 'note','currency_id'
     ];
 
     // Định nghĩa mối quan hệ với User

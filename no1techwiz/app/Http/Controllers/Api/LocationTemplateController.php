@@ -26,6 +26,7 @@ class LocationTemplateController extends Controller
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'image' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
         ]);
 
         $locationTemplate = LocationTemplate::create($request->all());
@@ -47,10 +48,13 @@ class LocationTemplateController extends Controller
      */
     public function update(Request $request, LocationTemplate $locationTemplate)
     {
+        $locationTemplate = LocationTemplate::findOrFail($id);
+
         $request->validate([
             'name' => 'sometimes|string|max:255',
             'category_id' => 'sometimes|exists:categories,id',
             'image' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
         ]);
 
         $locationTemplate->update($request->all());

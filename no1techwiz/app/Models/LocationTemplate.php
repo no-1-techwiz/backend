@@ -9,8 +9,12 @@ class LocationTemplate extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'category_id', 'image'];
-
+    protected $fillable = [
+        'name',
+        'category_id',
+        'image',
+        'description', // Thêm vào đây
+    ];
     // Mối quan hệ với Category
     public function category()
     {
