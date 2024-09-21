@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -120,4 +121,40 @@ class UserController extends Controller
             'message' => 'Đăng xuất thành công.',
         ]);
     }
+
+    public function loginWithGoogle(Request $request)
+    {
+        try {
+            $request->validate([
+                'email' => 'required|string|email|max:255',
+                'google_id' => 'required|string',
+            ]);
+    
+            $user = User::where('email', $request->email)->first();
+    
+            if (!$user) {
+                $user = User::create([
+                    'name' => 'User from Google',
+                    'email' => $request->email,
+                    'password' => bcrypt(Str::random(10)),
+                    'google_id' => $request->google_id,
+                ]);
+            } else {
+                $user->google_id = $request->google_id;
+                $user->save();
+            }
+    
+            $token = $user->createToken('auth_token')->plainTextToken;
+    
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'name' => $user->name,
+                'email' => $user->email,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    
 }

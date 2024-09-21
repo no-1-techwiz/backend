@@ -37,5 +37,4 @@ Route::apiResource('location-templates', LocationTemplateController::class);
 Route::apiResource('locations', LocationController::class);
 Route::apiResource('feedback', FeedbackController::class);
 
-// Route::get('trips', [TripController::class, 'index']);
-// Route::get('/trips/{trip}', [TripController::class, 'show']);
+Route::post('/login/google', [UserController::class, 'loginWithGoogle']);
