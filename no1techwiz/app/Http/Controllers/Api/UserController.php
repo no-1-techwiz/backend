@@ -45,6 +45,7 @@ class UserController extends Controller
         'token_type' => 'Bearer',
         'name' => $user->name,
         'email' => $user->email,
+        'id' => $user->id,
     ], 201);
 }
 
@@ -105,6 +106,7 @@ class UserController extends Controller
             'token_type' => 'Bearer',
             'name' => $user->name,
             'email' => $user->email,
+            'id' => $user->id,
         ], 201);
     }
 
@@ -151,6 +153,7 @@ class UserController extends Controller
                 'token_type' => 'Bearer',
                 'name' => $user->name,
                 'email' => $user->email,
+                'id' => $user->id,
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
