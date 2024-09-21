@@ -18,10 +18,9 @@ class UpdateUsersTable extends Migration
             if (!Schema::hasColumn('users', 'avatar')) {
                 $table->string('avatar')->nullable()->after('password');
             }
-            
             // Thêm cột role nếu chưa tồn tại
             if (!Schema::hasColumn('users', 'role')) {
-                $table->enum('role', ['admin', 'user'])->default('user')->after('remember_token');
+                $table->enum('role', ['admin', 'user'])->nullable()->default('user')->after('remember_token');
             }
         });
     }

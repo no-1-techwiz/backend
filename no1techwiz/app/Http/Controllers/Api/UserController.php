@@ -24,26 +24,28 @@ class UserController extends Controller
 
     // Lưu người dùng mới
     public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8',
+    ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => bcrypt($request->password),
+    ]);
 
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'name' => $user->name,
-            'email' => $user->email,
-        ], 201);
-    }
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    return response()->json([
+        'access_token' => $token,
+        'token_type' => 'Bearer',
+        'name' => $user->name,
+        'email' => $user->email,
+    ], 201);
+}
 
     // Cập nhật người dùng
     public function update(Request $request, User $user)
