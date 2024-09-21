@@ -36,6 +36,7 @@ class UserController extends Controller
         'name' => $request->name,
         'email' => $request->email,
         'password' => bcrypt($request->password),
+        'role' => 'user'
     ]);
 
     $token = $user->createToken('auth_token')->plainTextToken;
@@ -46,6 +47,7 @@ class UserController extends Controller
         'name' => $user->name,
         'email' => $user->email,
         'id' => $user->id,
+        'role' => $user->role
     ], 201);
 }
 
@@ -107,6 +109,7 @@ class UserController extends Controller
             'name' => $user->name,
             'email' => $user->email,
             'id' => $user->id,
+            'role' => $request->role,
         ], 201);
     }
 
@@ -131,33 +134,32 @@ class UserController extends Controller
                 'email' => 'required|string|email|max:255',
                 'google_id' => 'required|string',
             ]);
-    
             $user = User::where('email', $request->email)->first();
-    
             if (!$user) {
                 $user = User::create([
                     'name' => 'User from Google',
                     'email' => $request->email,
                     'password' => bcrypt(Str::random(10)),
                     'google_id' => $request->google_id,
+                    'role' => 'user'
                 ]);
             } else {
                 $user->google_id = $request->google_id;
                 $user->save();
             }
-    
             $token = $user->createToken('auth_token')->plainTextToken;
-    
             return response()->json([
                 'access_token' => $token,
                 'token_type' => 'Bearer',
                 'name' => $user->name,
                 'email' => $user->email,
                 'id' => $user->id,
+                'role' => $request->role,
+
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    
+
 }
