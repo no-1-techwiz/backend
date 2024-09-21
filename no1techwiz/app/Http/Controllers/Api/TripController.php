@@ -18,10 +18,10 @@ class TripController extends Controller
     // Hiển thị chuyến đi theo ID
     public function show(Trip $trip)
     {
-        $trip = Trip::with('currency')->findOrFail($id);
+        // Tải quan hệ 'currency'
+        $trip->load('currency');
         return response()->json($trip);
     }
-
     // Lưu chuyến đi mới
     public function store(Request $request)
     {

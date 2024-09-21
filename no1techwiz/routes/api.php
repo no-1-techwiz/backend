@@ -20,15 +20,22 @@ use App\Http\Controllers\Api\FeedbackController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('/register', [UserController::class, 'store']);
+Route::post('/login', [UserController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [UserController::class, 'logout']);
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{user}', [UserController::class, 'show']);
+    Route::put('/users/{user}', [UserController::class, 'update']);
+    Route::delete('/users/{user}', [UserController::class, 'destroy']);
 });
 
-Route::apiResource('users', UserController::class);
 Route::apiResource('trips', TripController::class);
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('location-templates', LocationTemplateController::class);
 Route::apiResource('locations', LocationController::class);
 Route::apiResource('feedback', FeedbackController::class);
 
-Route::get('trips', [TripController::class, 'index']);
+// Route::get('trips', [TripController::class, 'index']);
+// Route::get('/trips/{trip}', [TripController::class, 'show']);

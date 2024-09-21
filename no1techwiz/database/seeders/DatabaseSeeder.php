@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             LocationTemplateSeeder::class,
             LocationSeeder::class,
             FeedbackSeeder::class,
+            CurrencySeeder::class,
         ]);
     }
 }

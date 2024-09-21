@@ -9,7 +9,7 @@ class AddCurrencyIdToTripsTable extends Migration
     public function up()
     {
         Schema::table('trips', function (Blueprint $table) {
-            $table->foreignId('currency_id')->nullable()->constrained('currencies')->onDelete('set null');
+            $table->foreignId('currency_id')->nullable()->constrained()->onDelete('set null');
         });
     }
 

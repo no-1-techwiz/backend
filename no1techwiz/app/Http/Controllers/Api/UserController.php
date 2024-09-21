@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -27,19 +29,20 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'avatar' => 'nullable|string',
-            'role' => 'required|in:admin,user',
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'avatar' => $request->avatar,
-            'role' => $request->role,
         ]);
 
-        return response()->json($user, 201);
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'name' => $user->name,
+            'email' => $user->email,
+        ], 201);
     }
 
     // Cập nhật người dùng
@@ -72,5 +75,47 @@ class UserController extends Controller
     {
         $user->delete();
         return response()->json(null, 204);
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
+
+        // Kiểm tra thông tin đăng nhập
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            throw ValidationException::withMessages([
+                'email' => ['Thông tin đăng nhập không chính xác.'],
+            ]);
+        }
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // Tạo token cá nhân
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'name' => $user->name,
+            'email' => $user->email,
+        ], 201);
+    }
+
+    // Đăng xuất người dùng
+    public function logout(Request $request)
+    {
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
+        // Xóa tất cả các token của người dùng (hoặc chỉ token hiện tại)
+        $user->tokens()->delete();
+
+        return response()->json([
+            'message' => 'Đăng xuất thành công.',
+        ]);
     }
 }

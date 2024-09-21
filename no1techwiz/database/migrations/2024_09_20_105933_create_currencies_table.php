@@ -9,9 +9,10 @@ class CreateCurrenciesTable extends Migration
     public function up()
     {
         Schema::create('currencies', function (Blueprint $table) {
-            $table->id(); // Tạo ID tự động
-            $table->string('name'); // Cột name
-            $table->timestamps(); // Cột created_at và updated_at
+            $table->id();
+            $table->string('code')->unique();
+            $table->string('name');
+            $table->timestamps();
         });
     }
 
@@ -20,4 +21,3 @@ class CreateCurrenciesTable extends Migration
         Schema::dropIfExists('currencies');
     }
 }
-
