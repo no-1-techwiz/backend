@@ -35,11 +35,12 @@ class LocationController extends Controller
      * Hiển thị một location theo ID
      */
     public function show(Location $location)
-    {
-        $location->load(['locationTemplate', 'trip']);
-        return response()->json($location);
-    }
+{
+    $location->load(['locationTemplate', 'trip', 'expense']);
+    return response()->json($location);
+}
 
+    
     /**
      * Cập nhật một location
      */

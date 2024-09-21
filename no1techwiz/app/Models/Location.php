@@ -9,7 +9,7 @@ class Location extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['location_template_id', 'trip_id'];
+    protected $fillable = ['location_template_id', 'trip_id', 'expense_id'];
 
     // Mối quan hệ với LocationTemplate
     public function locationTemplate()
@@ -27,4 +27,9 @@ class Location extends Model
     {
         return $this->hasMany(Expense::class);
     }
+
+    public function expense()
+{
+    return $this->belongsTo(Expense::class, 'expense_id'); // Đảm bảo trường 'expense_id' được chỉ định
+}
 }
