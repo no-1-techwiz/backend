@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\LocationTemplateController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\FeedbackController;
+use App\Http\Controllers\Api\ExpenseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,5 +37,6 @@ Route::apiResource('categories', CategoryController::class);
 Route::apiResource('location-templates', LocationTemplateController::class);
 Route::apiResource('locations', LocationController::class);
 Route::apiResource('feedback', FeedbackController::class);
+Route::apiResource('expenses', ExpenseController::class);
 
 Route::post('/login/google', [UserController::class, 'loginWithGoogle']);

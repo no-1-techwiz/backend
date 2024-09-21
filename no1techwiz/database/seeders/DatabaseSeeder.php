@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             LocationSeeder::class,
             FeedbackSeeder::class,
             CurrencySeeder::class,
+            ExpenseSeeder::class,
         ]);
     }
 }

@@ -22,4 +22,9 @@ class Location extends Model
     {
         return $this->belongsTo(Trip::class);
     }
+    
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
 }
